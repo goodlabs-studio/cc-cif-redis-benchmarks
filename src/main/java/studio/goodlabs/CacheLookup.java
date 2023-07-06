@@ -80,8 +80,8 @@ public class CacheLookup {
                 double redisTime = (t4 - t3) / (double) TimeUnit.MILLISECONDS.toNanos(1);
                 redisTimes[i] = redisTime;
                 String cif = entry.getValue();
-                if (logger.isDebugEnabled())
-                    logger.debug("{}: {} vs {}, file read time {} ms, redis time {} ms", ccNo, cif, cachedCif, fileTime, redisTime);
+                if (logger.isTraceEnabled())
+                    logger.trace("{}: {} vs {}, file read time {} ms, redis time {} ms", ccNo, cif, cachedCif, fileTime, redisTime);
                 if (!cif.equals(cachedCif))
                     throw new IllegalArgumentException("CIF don't match: " + cif + " vs cached " + cif);
             }
