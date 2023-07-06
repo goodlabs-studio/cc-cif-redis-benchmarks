@@ -42,6 +42,7 @@ public class CacheLookup {
         RedisCache redisCache = switch (driver) {
             case "jedis" -> JedisCache.initialize();
             case "lettuce" -> LettuceCache.initialize();
+            case "lettuceCSC" -> ClientSideCachingLettuceCache.initialize();
             default -> throw new IllegalArgumentException("unsuported driver: " + driver);
         };
         try (redisCache) {
@@ -67,9 +68,9 @@ public class CacheLookup {
             logger.info("executing {} lookups: {} misses, {} hits", lookupCount, missCount, hitCount);
             double[] redisTimes = new double[lookupCount];
             for (int i = 0; i < lookupCount; ++i) {
-                int randomIndex = indices[i];
+                int index = indices[i];
                 long t1 = System.nanoTime();
-                Map.Entry<String, String> entry = ccCifFile.read(randomIndex);
+                Map.Entry<String, String> entry = ccCifFile.read(index);
                 long t2 = System.nanoTime();
                 String ccNo = entry.getKey();
                 long t3 = System.nanoTime();
@@ -79,8 +80,8 @@ public class CacheLookup {
                 double redisTime = (t4 - t3) / (double) TimeUnit.MILLISECONDS.toNanos(1);
                 redisTimes[i] = redisTime;
                 String cif = entry.getValue();
-                if (logger.isTraceEnabled())
-                    logger.trace("{}: {} vs {}, file read time {} ms, redis time {} ms", ccNo, cif, cachedCif, fileTime, redisTime);
+                if (logger.isDebugEnabled())
+                    logger.debug("{}: {} vs {}, file read time {} ms, redis time {} ms", ccNo, cif, cachedCif, fileTime, redisTime);
                 if (!cif.equals(cachedCif))
                     throw new IllegalArgumentException("CIF don't match: " + cif + " vs cached " + cif);
             }

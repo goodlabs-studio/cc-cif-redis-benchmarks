@@ -1,5 +1,7 @@
 <configuration>
 
+    <shutdownHook class="ch.qos.logback.core.hook.DefaultShutdownHook"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
@@ -8,13 +10,17 @@
         </encoder>
     </appender>
 
+    <appender name="ASYNC_STDOUT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+    </appender>
+
     <logger name="redis.clients.jedis.JedisFactory" level="INFO"/>
 
     <logger name="io.netty" level="INFO"/>
     <logger name="io.lettuce.core" level="INFO"/>
 
     <root level="debug">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="ASYNC_STDOUT" />
     </root>
 
 </configuration>
