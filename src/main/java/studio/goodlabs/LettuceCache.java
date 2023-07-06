@@ -1,9 +1,11 @@
 package studio.goodlabs;
 
 import io.lettuce.core.ClientOptions;
+import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.TrackingArgs;
+import io.lettuce.core.ScanArgs;
+import io.lettuce.core.ScanCursor;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.protocol.ProtocolVersion;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +71,18 @@ public class LettuceCache implements RedisCache {
 
     @Override
     public List<String> scan(int maxCount) {
-        throw new UnsupportedOperationException(); // todo XXX
+        ScanArgs scanArgs = new ScanArgs().limit(maxCount);
+        List<String> keys = null;
+        ScanCursor scanCursor = ScanCursor.INITIAL;
+        do {
+            KeyScanCursor<String> scanResult = commands.scan(scanCursor, scanArgs);
+            List<String> result = scanResult.getKeys();
+            if (keys == null)
+                keys = new ArrayList<>(result.size());
+            keys.addAll(result);
+            scanCursor = ScanCursor.of(scanCursor.getCursor());
+        } while (!scanCursor.isFinished() && (keys.size() < maxCount));
+        return keys;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class CacheUploader {
     private static final int LINE_BUFFER_SIZE = 100_000;
 
     public static void main(String[] args) throws IOException {
-        RedisCache redisCache = JedisCache.initialize();
+        RedisCache redisCache = LettuceCache.initialize();
         Path mappingFile = Path.of("data", "cc_cif.txt");
         try (BufferedReader in = Files.newBufferedReader(mappingFile)) {
             List<String> lines = new ArrayList<>(LINE_BUFFER_SIZE);

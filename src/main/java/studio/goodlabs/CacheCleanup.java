@@ -15,7 +15,7 @@ public class CacheCleanup {
 
     public static void main(String[] args) throws IOException {
         logger.info("connecting to Redis");
-        try (RedisCache redisCache = JedisCache.initialize()) {
+        try (RedisCache redisCache = LettuceCache.initialize()) {
             List<String> ccNumbers;
             do {
                 logger.info("looking for #s");
