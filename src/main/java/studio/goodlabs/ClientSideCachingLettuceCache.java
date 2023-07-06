@@ -99,7 +99,7 @@ public class ClientSideCachingLettuceCache implements RedisCache {
                 Integer.parseInt(properties.getProperty("redis.database")),
                 Duration.ofMillis(Integer.parseUnsignedInt(properties.getProperty("redis.timeout")))
         );
-        logger.info("cluster info: {}", lettuceCache.commands.info());
+        logger.trace("cluster info: {}", lettuceCache.commands.info());
         return lettuceCache;
     }
 

@@ -16,8 +16,9 @@
 
     <logger name="redis.clients.jedis.JedisFactory" level="INFO"/>
 
-    <logger name="io.netty" level="INFO"/>
     <logger name="io.lettuce.core" level="INFO"/>
+    <logger name="io.netty" level="INFO"/>
+    <logger name="reactor.util" level="INFO"/>
 
     <root level="debug">
         <appender-ref ref="ASYNC_STDOUT" />

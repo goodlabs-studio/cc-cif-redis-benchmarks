@@ -67,6 +67,7 @@ public class CacheLookup {
             // run
             logger.info("executing {} lookups: {} misses, {} hits", lookupCount, missCount, hitCount);
             double[] redisTimes = new double[lookupCount];
+            long t0 = System.nanoTime();
             for (int i = 0; i < lookupCount; ++i) {
                 int index = indices[i];
                 long t1 = System.nanoTime();
@@ -85,6 +86,9 @@ public class CacheLookup {
                 if (!cif.equals(cachedCif))
                     throw new IllegalArgumentException("CIF don't match: " + cif + " vs cached " + cif);
             }
+            long t9 = System.nanoTime();
+            double elapsedTime = (t9 - t0) / (double) TimeUnit.SECONDS.toNanos(1);
+            logger.info("elapsed time: {} s.", "%.3f".formatted(elapsedTime));
             Percentile percentile = new Percentile();
             logger.info("min = {} ms", "%.1f".formatted(DoubleStream.of(redisTimes).skip(WARMUP_COUNT).min().orElseThrow()));
             logger.info("median = {} ms", "%.1f".formatted(percentile.evaluate(redisTimes, WARMUP_COUNT, lookupCount - WARMUP_COUNT, 50)));

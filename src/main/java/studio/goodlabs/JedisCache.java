@@ -123,7 +123,7 @@ public class JedisCache implements RedisCache {
                 Integer.parseUnsignedInt(properties.getProperty("redis.maxIdle")),
                 Integer.parseUnsignedInt(properties.getProperty("redis.maxTotal"))
         );
-        logger.info("cluster info: {}", redisCache.<String>call(Jedis::info));
+        logger.trace("cluster info: {}", redisCache.<String>call(Jedis::info));
         return redisCache;
     }
 
