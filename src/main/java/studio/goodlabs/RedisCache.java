@@ -80,7 +80,7 @@ public class RedisCache implements Closeable {
         Properties properties = new Properties();
         properties.load(Files.newInputStream(Path.of("conf", "cloud.properties")));
         String redisPassword = Files.readAllLines(Path.of("secrets", "redis", "password.txt")).get(0);
-        return new RedisCache(
+        RedisCache redisCache = new RedisCache(
                 properties.getProperty("redis.host"),
                 Integer.parseUnsignedInt(properties.getProperty("redis.port")),
                 Boolean.parseBoolean(properties.getProperty("redis.ssl")),
@@ -91,6 +91,8 @@ public class RedisCache implements Closeable {
                 Integer.parseUnsignedInt(properties.getProperty("redis.maxIdle")),
                 Integer.parseUnsignedInt(properties.getProperty("redis.maxTotal"))
         );
+        logger.info("cluster info: {}", redisCache.<String>call(jedis -> jedis.info()));
+        return redisCache;
     }
 
 }
