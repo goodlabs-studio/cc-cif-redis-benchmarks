@@ -1,12 +1,19 @@
 # Azure Redis
 
-    Premium (and Basic 6Gb)    
+    SKU: C3_Basic; Basic (and later Premium) 6Gb
+    Version: 6.0.14
     Canada Central
 
 36MM accounts could fit only into Basic 6Gb cache (previous size available 2.5Gb)
 
 # Azure VM (for client lookups)
 
+    Operating system: Linux
+    Image publisher: OpenLogic
+    Image offer: CentOS
+    Image plan: 7_9
+    VM generation: V1
+    VM architecture: x64
     Size: Standard F4s v2
     vCPUs: 4
     RAM: 8 GiB
@@ -14,8 +21,8 @@
 
 # Redis Java drivers in scope
 
-- Jedis (https://github.com/redis/jedis)
-- Lettuce (https://lettuce.io/)
+- Jedis 4.4.3 (https://github.com/redis/jedis)
+- Lettuce 6.2.4 (https://lettuce.io/)
 
 # Results:
 
