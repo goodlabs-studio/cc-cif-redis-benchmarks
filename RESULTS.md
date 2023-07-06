@@ -17,8 +17,8 @@ Caching:
 |-----------------------------------------|-----------|-----------|-------------|---------|---------|
 | Jedis                                   | 4.3       | 4.8       | 8.2         | 3.2     | 20.0    |
 | Lettuce (Premium tier)                  | 0.5       | 0.9       | 2.0         | 0.2     | 4.4     |
-| Lettuce (Standard tier)                 | 2.4       | 2.8       | 5.6         | 1.6     | 13.8    |
 | Lettuce (client-side caching, Premium)  | 0.0       | 0.0       | 1.2         | 0.0     | 3.0     |
+| Lettuce (Standard tier)                 | 2.4       | 2.8       | 5.6         | 1.6     | 13.8    |
 | Lettuce (client-side caching, Standard) | 0.0       | 2.4       | 3.0         | 0.0     | 4.9     |
 
 ### Jedis log
