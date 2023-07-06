@@ -10,6 +10,9 @@
 
     <logger name="redis.clients.jedis.JedisFactory" level="INFO"/>
 
+    <logger name="io.netty" level="INFO"/>
+    <logger name="io.lettuce.core" level="INFO"/>
+
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>

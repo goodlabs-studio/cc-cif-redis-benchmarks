@@ -18,7 +18,7 @@ public class CacheUploader {
     private static final int LINE_BUFFER_SIZE = 100_000;
 
     public static void main(String[] args) throws IOException {
-        RedisCache redisCache = RedisCache.initialize();
+        RedisCache redisCache = JedisCache.initialize();
         Path mappingFile = Path.of("data", "cc_cif.txt");
         try (BufferedReader in = Files.newBufferedReader(mappingFile)) {
             List<String> lines = new ArrayList<>(LINE_BUFFER_SIZE);
@@ -51,7 +51,7 @@ public class CacheUploader {
             keysAndValues[i * 2] = ccNo;
             keysAndValues[i * 2 + 1] = cif;
         }
-        redisCache.run(jedis -> jedis.mset(keysAndValues));
+        redisCache.mset(keysAndValues);
         logger.debug("Populated {} entries", "%,d".formatted(counter.addAndGet(lines.size())));
     }
 
