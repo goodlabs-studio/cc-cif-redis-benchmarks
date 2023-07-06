@@ -1,0 +1,7 @@
+/data/*
+/secrets/
+
+/target/
+
+### IntelliJ IDEA ###
+/.idea/
