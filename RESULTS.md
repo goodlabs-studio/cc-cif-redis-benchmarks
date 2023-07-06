@@ -1,4 +1,19 @@
-Redis Java Drivers in scope:
+# Azure Redis
+
+    Premium (and Basic 6Gb)    
+    Canada Central
+
+36MM accounts could fit only into Basic 6Gb cache (previous size available 2.5Gb)
+
+# Azure VM (for client lookups)
+
+    Size: Standard F4s v2
+    vCPUs: 4
+    RAM: 8 GiB
+    Canada Central (Zone 1)
+
+# Redis Java drivers in scope
+
 - Jedis (https://github.com/redis/jedis)
 - Lettuce (https://lettuce.io/)
 
@@ -21,6 +36,7 @@ Caching:
 | Lettuce (Standard tier)                 | 2.4       | 2.8       | 5.6         | 1.6     | 13.8    |
 | Lettuce (client-side caching, Standard) | 0.0       | 2.4       | 3.0         | 0.0     | 4.9     |
 
+VM 
 ### Jedis log
 
 ```
