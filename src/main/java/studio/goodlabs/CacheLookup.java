@@ -26,6 +26,7 @@ public class CacheLookup {
     private static final Option DRIVER_OPTION = new Option("d", "driver", true, "driver: lettuce | jedis");
     private static final Option MISS_COUNT_OPTION = new Option("m", "missCount", true, "cache miss count");
     private static final Option HIT_COUNT_OPTION = new Option("h", "hitCount", true, "cache hit count");
+    private static final Option VERBOSE_OPTION = new Option("v", "verbose", false, "verbose log");
 
     private static final Options OPTIONS = new Options();
 
@@ -33,10 +34,12 @@ public class CacheLookup {
         OPTIONS.addOption(DRIVER_OPTION);
         OPTIONS.addOption(MISS_COUNT_OPTION);
         OPTIONS.addOption(HIT_COUNT_OPTION);
+        OPTIONS.addOption(VERBOSE_OPTION);
     }
 
     public static void main(String[] args) throws Exception {
         CommandLine commandLine = new DefaultParser().parse(OPTIONS, args);
+        boolean verboseLog = commandLine.hasOption(VERBOSE_OPTION);
         String driver = Objects.requireNonNull(commandLine.getOptionValue(DRIVER_OPTION.getOpt()), "missing driver");
         logger.info("connecting to Redis using driver: {}", driver);
         RedisCache redisCache = switch (driver) {
@@ -48,13 +51,13 @@ public class CacheLookup {
         try (redisCache) {
             int missCount = Integer.parseUnsignedInt(Objects.requireNonNull(commandLine.getOptionValue(MISS_COUNT_OPTION.getOpt()), "missing missCount"));
             int hitCount = Integer.parseUnsignedInt(Objects.requireNonNull(commandLine.getOptionValue(HIT_COUNT_OPTION.getOpt()), "missing hitCount"));
-            new CacheLookup(redisCache, hitCount, missCount);
+            new CacheLookup(redisCache, hitCount, missCount, verboseLog);
         }
     }
 
     private final RandomGenerator random = new Random();
 
-    public CacheLookup(RedisCache redisCache, int hitCount, int missCount) throws IOException {
+    public CacheLookup(RedisCache redisCache, int hitCount, int missCount, boolean verboseLog) throws IOException {
         try (CCCIFFile ccCifFile = new CCCIFFile(Path.of("data", "cc_cif.txt"))) {
             int lookupCount = missCount + hitCount;
             int[] indices = new int[lookupCount];
@@ -81,8 +84,13 @@ public class CacheLookup {
                 double redisTime = (t4 - t3) / (double) TimeUnit.MILLISECONDS.toNanos(1);
                 redisTimes[i] = redisTime;
                 String cif = entry.getValue();
-                if (logger.isTraceEnabled())
-                    logger.trace("{}: {} vs {}, file read time {} ms, redis time {} ms", ccNo, cif, cachedCif, fileTime, redisTime);
+                if (verboseLog) {
+                    if (logger.isDebugEnabled())
+                        logger.debug("{}: {} vs {}, file read time {} ms, redis time {} ms", ccNo, cif, cachedCif, fileTime, redisTime);
+                } else {
+                    if (logger.isTraceEnabled())
+                        logger.trace("{}: {} vs {}, file read time {} ms, redis time {} ms", ccNo, cif, cachedCif, fileTime, redisTime);
+                }
                 if (!cif.equals(cachedCif))
                     throw new IllegalArgumentException("CIF don't match: " + cif + " vs cached " + cif);
             }
