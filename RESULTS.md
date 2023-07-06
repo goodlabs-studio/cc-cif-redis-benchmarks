@@ -1,6 +1,6 @@
 Redis Java Drivers in scope:
-- Jedis
-- Lettuce
+- Jedis (https://github.com/redis/jedis)
+- Lettuce (https://lettuce.io/)
 
 # Results:
 
@@ -13,11 +13,13 @@ Caching:
 
 ### Random lookup latency
 
-| Driver                        | P(95), ms | P(99), ms | P(99.9), ms | min, ms | max, ms |
-|-------------------------------|-----------|-----------|-------------|---------|---------|
-| Jedis                         | 4.3       | 4.8       | 8.2         | 3.2     | 20.0    |
-| Lettuce                       | 2.4       | 2.8       | 5.6         | 1.6     | 13.8    |
-| Lettuce (client-side caching) | 0.0       | 2.4       | 3.0         | 0.0     | 4.9     |
+| Driver                                  | P(95), ms | P(99), ms | P(99.9), ms | min, ms | max, ms |
+|-----------------------------------------|-----------|-----------|-------------|---------|---------|
+| Jedis                                   | 4.3       | 4.8       | 8.2         | 3.2     | 20.0    |
+| Lettuce (Premium tier)                  | 0.5       | 0.9       | 2.0         | 0.2     | 4.4     |
+| Lettuce (Standard tier)                 | 2.4       | 2.8       | 5.6         | 1.6     | 13.8    |
+| Lettuce (client-side caching, Premium)  | 0.0       | 0.0       | 1.2         | 0.0     | 3.0     |
+| Lettuce (client-side caching, Standard) | 0.0       | 2.4       | 3.0         | 0.0     | 4.9     |
 
 ### Jedis log
 
@@ -64,3 +66,32 @@ Caching:
 20:29:58.941 [main] INFO  studio.goodlabs.CacheLookup - p(99.9) = 3.0 ms
 20:29:58.943 [main] INFO  studio.goodlabs.CacheLookup - max = 4.9 ms
 ```
+
+### Lettuce Premium 6Gb
+```
+[stan@td-poc-vm01 cc2cif-1.0-SNAPSHOT]$ ./cacheLookup.sh -d lettuce -m 100 -h 10000
+21:45:34.820 [main] INFO  studio.goodlabs.CacheLookup - connecting to Redis using driver: lettuce
+21:45:35.817 [main] INFO  studio.goodlabs.CacheLookup - executing 10100 lookups: 100 misses, 10000 hits
+21:45:38.904 [main] INFO  studio.goodlabs.CacheLookup - elapsed time: 3.077 s.
+21:45:38.916 [main] INFO  studio.goodlabs.CacheLookup - min = 0.2 ms
+21:45:38.926 [main] INFO  studio.goodlabs.CacheLookup - median = 0.3 ms
+21:45:38.927 [main] INFO  studio.goodlabs.CacheLookup - p(95) = 0.5 ms
+21:45:38.928 [main] INFO  studio.goodlabs.CacheLookup - p(99) = 0.9 ms
+21:45:38.929 [main] INFO  studio.goodlabs.CacheLookup - p(99.9) = 2.0 ms
+21:45:38.931 [main] INFO  studio.goodlabs.CacheLookup - max = 4.4 ms
+```
+
+### Lettuce Premium 6Gb caching
+```
+[stan@td-poc-vm01 cc2cif-1.0-SNAPSHOT]$ ./cacheLookup.sh -d lettuceCSC -m 100 -h 10000
+21:47:33.978 [main] INFO  studio.goodlabs.CacheLookup - connecting to Redis using driver: lettuceCSC
+21:47:34.987 [main] INFO  studio.goodlabs.CacheLookup - executing 10100 lookups: 100 misses, 10000 hits
+21:47:35.105 [main] INFO  studio.goodlabs.CacheLookup - elapsed time: 0.111 s.
+21:47:35.129 [main] INFO  studio.goodlabs.CacheLookup - min = 0.0 ms
+21:47:35.139 [main] INFO  studio.goodlabs.CacheLookup - median = 0.0 ms
+21:47:35.140 [main] INFO  studio.goodlabs.CacheLookup - p(95) = 0.0 ms
+21:47:35.141 [main] INFO  studio.goodlabs.CacheLookup - p(99) = 0.0 ms
+21:47:35.142 [main] INFO  studio.goodlabs.CacheLookup - p(99.9) = 1.2 ms
+21:47:35.144 [main] INFO  studio.goodlabs.CacheLookup - max = 3.0 ms
+```
+
