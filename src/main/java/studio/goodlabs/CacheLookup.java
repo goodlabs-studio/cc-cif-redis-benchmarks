@@ -63,7 +63,7 @@ public class CacheLookup {
                 indices[i] = random.nextInt(36_000_000); // ignore possible unlikely collision
             // fill hits
             for (int i = missCount; i < lookupCount; ++i)
-                indices[i] = random.nextInt(missCount);
+                indices[i] = indices[random.nextInt(missCount)];
             // run
             logger.info("executing {} lookups: {} misses, {} hits", lookupCount, missCount, hitCount);
             double[] redisTimes = new double[lookupCount];
